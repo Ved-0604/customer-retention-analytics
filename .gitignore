@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Environment Variables & Secrets
+.env
+*.env.local
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# IDE & OS Files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Large Generated Data (Git LFS or regenerate with src/data_generation.py)
+# Keep raw CSVs tracked if needed, or track scripts and schemas
+# data/raw/*.csv
+# data/processed/*.csv
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
