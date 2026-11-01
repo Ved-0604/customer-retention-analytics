@@ -50,8 +50,8 @@ class AnalyticsConfig:
     random_seed: int = int(os.getenv("RANDOM_SEED", "42"))
     
     # Dataset Target Scale
-    target_customers: int = 12000
-    target_transactions: int = 125000
+    target_customers: int = 15000
+    target_transactions: int = 135000
     target_categories: int = 12
     
     # Date Range (2 full years of analytical history)
