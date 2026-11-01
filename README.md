@@ -1,134 +1,158 @@
 # Customer Retention & Churn Analytics Platform
 
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791.svg)](https://www.postgresql.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-336791.svg)](https://www.postgresql.org/)
+[![DuckDB](https://img.shields.io/badge/DuckDB-OLAP-FFF000.svg)](https://duckdb.org/)
 [![Power BI](https://img.shields.io/badge/Power_BI-Executive_Dashboard-F2C811.svg)](https://powerbi.microsoft.com/)
-[![Tests](https://img.shields.io/badge/Tests-Pytest-green.svg)](https://pytest.org/)
+[![Tests](https://img.shields.io/badge/Tests-16%20Passed-green.svg)](https://pytest.org/)
 
-An enterprise-grade, end-to-end e-commerce customer analytics platform engineered to diagnose customer retention, identify churn drivers, calculate Customer Lifetime Value (CLV), execute RFM segmentation, and deliver actionable executive retention strategies.
-
-Built to simulate real-world analytics engineering workflows at scale: relational database modeling in **PostgreSQL**, statistical and cohort analytics in **Python**, validation with automated **pytest** suites, and executive reporting in **Power BI**.
+An enterprise-grade, end-to-end e-commerce customer analytics platform engineered from scratch. Simulates real-world data engineering, relational database modeling in **PostgreSQL**, cohort retention and churn driver modeling in **Python**, validation with automated **pytest** suites, and executive reporting in **Power BI**.
 
 ---
 
-## 🏗️ Architecture & Tech Stack
+## 🏗️ Architecture & Platform Overview
 
 ```
-                              ┌──────────────────────────────────────────────┐
-                              │            Raw Relational Data               │
-                              │ 10,000+ Customers | 100,000+ Transactions    │
-                              └──────────────────────┬───────────────────────┘
-                                                     │
-                                                     ▼
-                              ┌──────────────────────────────────────────────┐
-                              │     Python ETL & Feature Engineering         │
-                              │ (src/data_cleaning.py, feature_eng.py)       │
-                              └──────────────────────┬───────────────────────┘
-                                                     │
-                                                     ▼
-                              ┌──────────────────────────────────────────────┐
-                              │        PostgreSQL Analytical Warehouse       │
-                              │  Normalized Tables, Constraints, Indexes     │
-                              │     Analytical Views (RFM, Cohorts, CLV)     │
-                              └──────────────────────┬───────────────────────┘
-                                                     │
-                         ┌───────────────────────────┴───────────────────────────┐
-                         ▼                                                       ▼
-       ┌───────────────────────────────────┐                   ┌───────────────────────────────────┐
-       │   Advanced SQL & Python Analytics │                   │     Power BI Executive Dashboard  │
-       │  - Monthly Cohort Heatmaps        │                   │  Page 1: Executive Overview       │
-       │  - Recency-Frequency-Monetary     │                   │  Page 2: Customer Retention       │
-       │  - 90-Day Inactivity Churn Model  │                   │  Page 3: Churn Driver Analysis    │
-       │  - Historical vs Estimated CLV    │                   │  Page 4: RFM Segmentation         │
-       └───────────────────────────────────┘                   │  Page 5: Customer Lifetime Value  │
-                                                               └───────────────────────────────────┘
+                               ┌──────────────────────────────────────────────┐
+                               │           Raw Relational Data                │
+                               │  15,000 Customers | 108,184 Transactions     │
+                               │  174,298 Line Items | 12 Product Categories  │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                                                      ▼
+                               ┌──────────────────────────────────────────────┐
+                               │       Data Cleaning & Quality Pipeline       │
+                               │ (src/data_cleaning.py, feature_eng.py)       │
+                               │ Penny-exact balancing · Zero nulls & orphans │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                                                      ▼
+                               ┌──────────────────────────────────────────────┐
+                               │       PostgreSQL Analytical Warehouse        │
+                               │   Normalized 3NF Tables, CHECK Constraints   │
+                               │    B-Tree Indexes & Analytical SQL Views     │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                         ┌────────────────────────────┴───────────────────────────┐
+                         ▼                                                        ▼
+       ┌───────────────────────────────────┐                    ┌───────────────────────────────────┐
+       │   Advanced SQL & Statistical ML   │                    │     Power BI Executive Dashboard  │
+       │  - Monthly Cohort Heatmaps (M0-M12)│                   │  Page 1: Executive Overview       │
+       │  - RFM Quintile Tiering (8 Tiers) │                    │  Page 2: Customer Retention       │
+       │  - 90-Day Inactivity Churn Model  │                    │  Page 3: Churn Driver Analysis    │
+       │  - Realized Margin vs Est. CLV    │                    │  Page 4: RFM Segmentation         │
+       │  - Logistic Regression Odds Ratios│                    │  Page 5: Customer Lifetime Value  │
+       └───────────────────────────────────┘                    └───────────────────────────────────┘
 ```
-
-- **Database**: PostgreSQL (Relational schema, 3NF, indexed foreign keys, analytical views).
-- **Analytics Engineering / Data Processing**: Python 3.13 (`pandas`, `numpy`, `scipy`, `scikit-learn`, `sqlalchemy`, `duckdb`).
-- **Testing & Quality Assurance**: `pytest` test suites validating data integrity, no future leakage, and SQL-Python metric alignment.
-- **Business Intelligence**: Power BI (5-page interactive dashboard with DAX measures and dimensional model).
-- **Business Strategy**: Actionable Executive Recommendation Memo addressed to Head of Growth / CMO.
 
 ---
 
-## 📁 Repository Structure
+## 📊 Core Business & Platform Metrics
+
+- **Total Net Revenue**: **\$21,787,238.47** (\$23.29M Gross GMV).
+- **Average Order Value (AOV)**: **\$201.39** across 108,184 completed orders.
+- **Customer Base**: **15,000 unique accounts** across 20 metropolitan areas.
+- **Repeat Purchase Rate**: **54.8%** (8,217 repeat buyers).
+- **90-Day Inactivity Churn Rate**: **58.1%** (8,722 churned accounts).
+- **Top Segment Concentration (Pareto)**: The top **20% of customers (Champions & Loyalists) account for 74.0% of total platform revenue (\$16.13M)**.
+- **Revenue at Immediate Risk**: **\$956.7K** across 980 high-spending customers currently in the "At Risk" and "Cannot Lose Them" dormancy zones.
+
+---
+
+## 📁 Repository Directory Structure
 
 ```
 customer-retention-analytics/
 │
 ├── data/
-│   ├── raw/                           # Raw synthetic relational CSVs (100k+ transactions)
-│   └── processed/                     # Cleaned, validated, and enriched analytical datasets
+│   ├── raw/                               # Raw synthetic relational CSVs (108k+ orders)
+│   ├── processed/                         # Cleaned, validated CSVs and customer_features.csv
+│   └── ecommerce_analytics.duckdb         # Zero-dependency local OLAP SQL database
 │
 ├── notebooks/
-│   ├── 01_data_exploration.ipynb      # Initial EDA, missingness, distributions
-│   ├── 02_data_cleaning.ipynb         # Data auditing, type casting, deduplication
-│   ├── 03_rfm_analysis.ipynb          # RFM scoring, quantile segmentation, revenue impact
-│   ├── 04_churn_analysis.ipynb        # Inactivity churn modeling, hazard & driver analysis
-│   └── 05_clv_analysis.ipynb          # Historical CLV vs Estimated Predictive CLV
+│   ├── 01_data_exploration.ipynb          # Exploratory Data Analysis & distributions
+│   ├── 02_data_cleaning.ipynb             # Nulls, duplicates, and referential audits
+│   ├── 03_rfm_analysis.ipynb              # Recency, Frequency, Monetary scoring
+│   ├── 04_churn_analysis.ipynb            # Hazard rates & logistic regression drivers
+│   └── 05_clv_analysis.ipynb              # Realized gross margin vs estimated CLV
 │
 ├── sql/
-│   ├── schema.sql                     # PostgreSQL DDL with PK, FK, constraints, indexes
-│   ├── data_quality.sql               # Data sanity audits and referential integrity tests
-│   ├── revenue_analysis.sql           # MoM growth, category performance, AOV
-│   ├── retention_analysis.sql         # Monthly acquisition cohort retention matrices
-│   ├── churn_analysis.sql             # 90-day churn rates, tenure, cancellation analysis
-│   ├── rfm_segmentation.sql           # NTILE window functions and customer tiering
-│   └── clv_analysis.sql               # Cumulative margin and customer lifetime value
+│   ├── schema.sql                         # PostgreSQL 3NF DDL with PK, FK, and indexes
+│   ├── data_quality.sql                   # Referential integrity and balance checks
+│   ├── revenue_analysis.sql               # MoM growth, category performance, Pareto spend
+│   ├── retention_analysis.sql             # Monthly cohort matrices (Month 0 to Month 12)
+│   ├── churn_analysis.sql                 # Inactivity bins, cancellation impact, channel churn
+│   ├── rfm_segmentation.sql               # NTILE(5) scoring and 8 behavioral tiers
+│   └── clv_analysis.sql                   # Historical gross profit vs predictive CLV
 │
 ├── powerbi/
-│   └── customer_retention_dashboard.pbix  # Interactive Power BI report & DAX specifications
+│   ├── DAX_MEASURES.md                    # Star schema diagram & production DAX formulas
+│   └── customer_retention_dashboard.pbix  # Power BI report template
 │
 ├── reports/
-│   └── executive_recommendation_memo.md   # Executive briefing for VP of Growth / CMO
+│   ├── executive_recommendation_memo.md   # Formal briefing for Head of Growth / CMO
+│   └── interactive_bi_platform.html       # Standalone 5-Page Interactive BI Dashboard
 │
 ├── src/
-│   ├── config.py                      # Global paths, constants, and database configurations
-│   ├── data_generation.py             # Reproducible synthetic data generator (seed=42)
-│   ├── data_cleaning.py               # Production cleaning and validation pipelines
-│   ├── feature_engineering.py         # Customer-level feature aggregation and metrics
-│   └── analysis.py                    # Modular statistical functions for cohorts & RFM
+│   ├── config.py                          # Global parameters, paths, and DB configs
+│   ├── data_generation.py                 # Reproducible synthetic generator (Seed=42)
+│   ├── data_cleaning.py                   # Type coercion, reconciliation, and audit logger
+│   ├── db_loader.py                       # PostgreSQL and DuckDB ingestion pipeline
+│   ├── feature_engineering.py             # Customer-level analytical feature store
+│   ├── analysis.py                        # Statistical RFM, cohorts, and churn models
+│   └── generate_notebooks.py              # Automated Jupyter notebook builder
 │
 ├── tests/
-│   ├── test_environment.py            # Environment, package, and config tests
-│   ├── test_data_generation.py        # Entity volume and referential integrity tests
-│   ├── test_data_quality.py           # Anomaly, missing value, and constraint checks
-│   └── test_metrics.py                # Reconciliation between SQL and Python KPIs
+│   ├── test_environment.py                # System runtime and dependency import checks
+│   ├── test_data_generation.py            # Scale, date span, and FK integrity checks
+│   ├── test_data_quality.py               # Financial ledger balancing and causality
+│   └── test_metrics.py                    # SQL vs Python KPI reconciliation (100% parity)
 │
-├── .env.example                       # Environment template for DB credentials
-├── .gitignore                         # Standard git ignore rules
-├── requirements.txt                   # Pinned dependency manifest
-└── README.md                          # Project documentation
+├── .env.example                           # Configuration credentials template
+├── .gitignore                             # Ignored artifacts, virtual environments, and DBs
+├── requirements.txt                       # Pinned Python package manifest
+└── README.md                              # Complete platform documentation
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🔍 Technical Decisions & Interview Defense Guide
 
-### 1. Prerequisites
-- Python 3.10+
-- PostgreSQL 14+ (or Docker / DuckDB for local verification)
-- Git
+### 1. Why Define Churn as 90 Days of Continuous Inactivity?
+- **Business Rationale**: In fast-moving e-commerce with a median repeat purchase interval of ~33 days, 90 days represents approximately $3\times$ the inter-purchase cycle.
+- **Defending Limitations in Interviews**:
+  - *Seasonal Buyers*: A customer who purchases holiday gifts every November will be erroneously flagged as churned in June.
+  - *Right-Censoring*: Recently acquired users (e.g., acquired in late November) have not lived long enough to reach 90 days of observation.
+  - *Dormancy vs. True Defection*: Inactivity signals disengagement, not necessarily that the customer deleted their account or switched to a competitor.
 
-### 2. Environment Setup
+### 2. How Was Financial Ledger Consistency Guaranteed?
+Rather than generating totals independently:
+1. Every order's gross amount is strictly the sum of its associated `order_items`.
+2. Net amount dynamically enforces business rules: $\text{Net} = \text{Gross} - \text{Discount} + \text{Shipping}$.
+3. Payments reconcile penny-for-penny with order net amounts.
+4. If any discrepancy exceeds \$0.01, automated pytest checks fail immediately.
+
+### 3. Historical CLV vs. Estimated Forward-Looking CLV
+- **Historical CLV**: The actual cumulative gross margin realized from past transactions minus acquisition CPA.
+- **Estimated CLV**: A forward-looking projection based on customer unit economics:
+  $$\text{Estimated CLV} = \text{AOV} \times \text{Annual Order Frequency} \times \text{Estimated Lifespan} \times \text{Gross Margin \%} - \text{CAC}$$
+  where $\text{Estimated Lifespan} = \frac{1}{\text{Churn Rate}}$.
+
+---
+
+## 🚀 Reproduction & Execution Instructions
+
 ```bash
-# Clone the repository
-git clone <repo-url>
+# 1. Activate Virtual Environment
 cd customer-retention-analytics
+source .venv/bin/activate
 
-# Create and activate Python virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# 2. Run Test Suite (16 Automated Tests)
+pytest tests/ -v
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Copy environment configuration
-cp .env.example .env
-```
-
-### 3. Verify Installation
-```bash
-pytest tests/test_environment.py
+# 3. Regenerate Datasets (Optional)
+python src/data_generation.py
+python src/data_cleaning.py
+python src/db_loader.py
+python src/feature_engineering.py
 ```
