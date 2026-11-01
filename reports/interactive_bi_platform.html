@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Retention & Churn Analytics Platform - Executive BI Dashboard</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .nav-btn-active {
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border-left: 3px solid #3b82f6;
+      font-weight: 600;
+    }
+    .heatmap-cell {
+      transition: transform 0.15s ease;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.08);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background,#f8fafc)] text-[var(--foreground,#0f172a)] antialiased p-4">
+  <div class="max-w-7xl mx-auto space-y-5">
+    
+    <!-- Top Platform Header -->
+    <header class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">
+            Power BI Executive Architecture
+          </span>
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Dataset: 108,184 Transactions · 15,000 Customers · Snapshot: 2025-12-31</span>
+        </div>
+        <h1 class="text-2xl font-bold mt-1 text-[var(--foreground,#0f172a)]">Customer Retention & Churn Analytics Platform</h1>
+        <p class="text-xs text-[var(--muted-foreground,#64748b)]">End-to-end analytics engineering, PostgreSQL data warehouse, and RFM / CLV modeling</p>
+      </div>
+
+      <!-- Global Filter Bar / Slicers -->
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <div>
+          <label class="block text-[11px] text-[var(--muted-foreground,#64748b)] font-medium mb-0.5">Category Slicer</label>
+          <select id="slicer-category" onchange="applySlicers()" class="bg-[var(--card,#ffffff)] border border-[var(--border,#cbd5e1)] rounded-lg px-2.5 py-1.5 font-medium">
+            <option value="all">All Categories (12)</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Apparel & Fashion">Apparel & Fashion</option>
+            <option value="Home & Kitchen">Home & Kitchen</option>
+            <option value="Sports & Outdoors">Sports & Outdoors</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-[var(--muted-foreground,#64748b)] font-medium mb-0.5">Channel Slicer</label>
+          <select id="slicer-channel" onchange="applySlicers()" class="bg-[var(--card,#ffffff)] border border-[var(--border,#cbd5e1)] rounded-lg px-2.5 py-1.5 font-medium">
+            <option value="all">All Acquisition Channels</option>
+            <option value="organic">Organic Search</option>
+            <option value="google_ads">Paid Search (Google Ads)</option>
+            <option value="paid_social">Paid Social (Meta)</option>
+            <option value="email">Email Marketing</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-[var(--muted-foreground,#64748b)] font-medium mb-0.5">Time Horizon</label>
+          <select id="slicer-time" onchange="applySlicers()" class="bg-[var(--card,#ffffff)] border border-[var(--border,#cbd5e1)] rounded-lg px-2.5 py-1.5 font-medium">
+            <option value="all">Full 2-Year Horizon (2024-2025)</option>
+            <option value="2025">Year 2025 Only</option>
+            <option value="2024">Year 2024 Only</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Navigation Ribbon (5 Power BI Report Pages) -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs font-medium">
+      <button onclick="navigatePage('page1')" id="nav-page1" class="nav-btn-active p-3 rounded-xl border border-[var(--border,#e2e8f0)] text-left transition-all">
+        <span class="block text-[10px] text-[var(--muted-foreground,#64748b)] uppercase tracking-wider">Page 1</span>
+        <span class="font-bold text-sm">Executive Overview</span>
+      </button>
+
+      <button onclick="navigatePage('page2')" id="nav-page2" class="p-3 rounded-xl border border-[var(--border,#e2e8f0)] text-left hover:bg-[var(--card,#ffffff)] transition-all">
+        <span class="block text-[10px] text-[var(--muted-foreground,#64748b)] uppercase tracking-wider">Page 2</span>
+        <span class="font-bold text-sm">Customer Retention</span>
+      </button>
+
+      <button onclick="navigatePage('page3')" id="nav-page3" class="p-3 rounded-xl border border-[var(--border,#e2e8f0)] text-left hover:bg-[var(--card,#ffffff)] transition-all">
+        <span class="block text-[10px] text-[var(--muted-foreground,#64748b)] uppercase tracking-wider">Page 3</span>
+        <span class="font-bold text-sm">Churn Hazard Drivers</span>
+      </button>
+
+      <button onclick="navigatePage('page4')" id="nav-page4" class="p-3 rounded-xl border border-[var(--border,#e2e8f0)] text-left hover:bg-[var(--card,#ffffff)] transition-all">
+        <span class="block text-[10px] text-[var(--muted-foreground,#64748b)] uppercase tracking-wider">Page 4</span>
+        <span class="font-bold text-sm">RFM Segmentation</span>
+      </button>
+
+      <button onclick="navigatePage('page5')" id="nav-page5" class="p-3 rounded-xl border border-[var(--border,#e2e8f0)] text-left hover:bg-[var(--card,#ffffff)] transition-all">
+        <span class="block text-[10px] text-[var(--muted-foreground,#64748b)] uppercase tracking-wider">Page 5</span>
+        <span class="font-bold text-sm">Customer Lifetime Value</span>
+      </button>
+    </div>
+
+    <!-- ================= PAGE 1: EXECUTIVE OVERVIEW ================= -->
+    <div id="page1" class="page-content space-y-4">
+      <!-- KPI Scorecards -->
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Total Net Revenue</span>
+          <p class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">$21.79M</p>
+          <span class="text-[11px] text-emerald-600 font-medium">↑ +38.4% YoY Growth</span>
+        </div>
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Total Customers</span>
+          <p class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mt-1">15,000</p>
+          <span class="text-[11px] text-[var(--muted-foreground,#64748b)]">Across 20 US Metros</span>
+        </div>
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Active (≤90 Days)</span>
+          <p class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">6,278</p>
+          <span class="text-[11px] text-indigo-500 font-medium">41.9% Active Base</span>
+        </div>
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Overall Churn Rate</span>
+          <p class="text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">58.1%</p>
+          <span class="text-[11px] text-rose-500 font-medium">8,722 Lapsed Users</span>
+        </div>
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Repeat Purchase Rate</span>
+          <p class="text-2xl font-extrabold text-purple-600 dark:text-purple-400 mt-1">54.8%</p>
+          <span class="text-[11px] text-[var(--muted-foreground,#64748b)]">8,217 Repeat Buyers</span>
+        </div>
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-xl p-4 shadow-sm">
+          <span class="text-xs text-[var(--muted-foreground,#64748b)]">Average Order (AOV)</span>
+          <p class="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">$201.39</p>
+          <span class="text-[11px] text-[var(--muted-foreground,#64748b)]">108,184 Orders Total</span>
+        </div>
+      </div>
+
+      <!-- Monthly Trend & Category Split -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Monthly Revenue Chart -->
+        <div class="md:col-span-2 bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold">Monthly Net Revenue & Holiday Seasonality (2024 - 2025)</h3>
+              <p class="text-xs text-[var(--muted-foreground,#64748b)]">Surges from $48k/mo in Jan 2024 to $2.51M/mo in Nov-Dec 2025</p>
+            </div>
+            <span class="text-xs font-mono px-2 py-1 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Peak GMV: Q4 Holidays</span>
+          </div>
+          <!-- Bar Chart Visual -->
+          <div class="h-48 flex items-end gap-1.5 pt-6 pb-2 border-b border-[var(--border,#e2e8f0)]">
+            <div class="flex-1 bg-blue-300 dark:bg-blue-900 rounded-t h-[4%]" title="Jan 24: $48k"></div>
+            <div class="flex-1 bg-blue-300 dark:bg-blue-900 rounded-t h-[7%]" title="Feb 24: $78k"></div>
+            <div class="flex-1 bg-blue-300 dark:bg-blue-900 rounded-t h-[11%]" title="Mar 24: $122k"></div>
+            <div class="flex-1 bg-blue-300 dark:bg-blue-900 rounded-t h-[13%]" title="Apr 24: $145k"></div>
+            <div class="flex-1 bg-blue-400 dark:bg-blue-800 rounded-t h-[17%]" title="May 24: $188k"></div>
+            <div class="flex-1 bg-blue-400 dark:bg-blue-800 rounded-t h-[20%]" title="Jun 24: $221k"></div>
+            <div class="flex-1 bg-blue-400 dark:bg-blue-800 rounded-t h-[25%]" title="Jul 24: $280k"></div>
+            <div class="flex-1 bg-blue-400 dark:bg-blue-800 rounded-t h-[28%]" title="Aug 24: $315k"></div>
+            <div class="flex-1 bg-blue-500 dark:bg-blue-700 rounded-t h-[34%]" title="Sep 24: $378k"></div>
+            <div class="flex-1 bg-blue-500 dark:bg-blue-700 rounded-t h-[42%]" title="Oct 24: $469k"></div>
+            <div class="flex-1 bg-indigo-500 rounded-t h-[48%]" title="Nov 24: $530k (Holiday 1)"></div>
+            <div class="flex-1 bg-indigo-600 rounded-t h-[56%]" title="Dec 24: $615k (Holiday 2)"></div>
+            <div class="flex-1 bg-blue-500 rounded-t h-[64%]" title="Jan 25: $712k"></div>
+            <div class="flex-1 bg-blue-500 rounded-t h-[66%]" title="Feb 25: $738k"></div>
+            <div class="flex-1 bg-blue-500 rounded-t h-[83%]" title="Mar 25: $930k"></div>
+            <div class="flex-1 bg-blue-500 rounded-t h-[91%]" title="Apr 25: $1.02M"></div>
+            <div class="flex-1 bg-blue-600 rounded-t h-[99%]" title="May 25: $1.20M"></div>
+            <div class="flex-1 bg-blue-600 rounded-t h-[100%]" style="height: 58%" title="Jun 25: $1.28M"></div>
+            <div class="flex-1 bg-blue-600 rounded-t h-[100%]" style="height: 68%" title="Jul 25: $1.52M"></div>
+            <div class="flex-1 bg-blue-600 rounded-t h-[100%]" style="height: 78%" title="Aug 25: $1.74M"></div>
+            <div class="flex-1 bg-blue-600 rounded-t h-[100%]" style="height: 82%" title="Sep 25: $1.83M"></div>
+            <div class="flex-1 bg-blue-700 rounded-t h-[100%]" style="height: 94%" title="Oct 25: $2.31M"></div>
+            <div class="flex-1 bg-emerald-500 rounded-t h-[100%]" style="height: 100%" title="Nov 25: $2.51M (Black Friday Surge)"></div>
+            <div class="flex-1 bg-emerald-600 rounded-t h-[100%]" style="height: 99%" title="Dec 25: $2.49M (Christmas Peak)"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-[var(--muted-foreground,#64748b)] pt-2 font-mono">
+            <span>2024-Q1</span>
+            <span>2024-Q3</span>
+            <span>2024-Q4 Holidays</span>
+            <span>2025-Q2</span>
+            <span>2025-Q4 Peak ($2.51M/mo)</span>
+          </div>
+        </div>
+
+        <!-- Top Category Performance -->
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold mb-1">Top Sectors by Gross Margin</h3>
+          <p class="text-xs text-[var(--muted-foreground,#64748b)] mb-4">Total Margin: $11.08M (47.6% Margin)</p>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between mb-1 font-medium"><span>1. Electronics</span><span class="text-emerald-600 font-bold">$2.22M (35%)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div class="bg-blue-600 h-2 rounded-full" style="width: 100%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1 font-medium"><span>2. Apparel & Fashion</span><span class="text-emerald-600 font-bold">$1.77M (60%)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: 80%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1 font-medium"><span>3. Home & Kitchen</span><span class="text-emerald-600 font-bold">$1.64M (52%)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div class="bg-indigo-600 h-2 rounded-full" style="width: 74%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1 font-medium"><span>4. Sports & Outdoors</span><span class="text-emerald-600 font-bold">$1.55M (50%)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div class="bg-cyan-600 h-2 rounded-full" style="width: 70%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1 font-medium"><span>5. Jewelry & Watches</span><span class="text-emerald-600 font-bold">$1.15M (70%)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div class="bg-amber-600 h-2 rounded-full" style="width: 52%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 2: CUSTOMER RETENTION ================= -->
+    <div id="page2" class="page-content hidden space-y-4">
+      <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold">Monthly Acquisition Cohort Retention Heatmap</h2>
+            <p class="text-xs text-[var(--muted-foreground,#64748b)]">Tracks percentage of active customers making purchases in Month 0 through Month 12 following account signup</p>
+          </div>
+          <span class="text-xs bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 px-3 py-1 rounded-lg font-medium">Benchmark: M1 Retention ~ 38%</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-center border-collapse">
+            <thead>
+              <tr class="bg-slate-50 dark:bg-slate-900 border-b border-[var(--border,#e2e8f0)] font-semibold text-[var(--muted-foreground,#64748b)]">
+                <th class="p-2 text-left">Cohort Month</th>
+                <th class="p-2">Users</th>
+                <th class="p-2">M0</th>
+                <th class="p-2">M1</th>
+                <th class="p-2">M2</th>
+                <th class="p-2">M3</th>
+                <th class="p-2">M4</th>
+                <th class="p-2">M5</th>
+                <th class="p-2">M6</th>
+                <th class="p-2">M9</th>
+                <th class="p-2">M12</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border,#e2e8f0)] font-mono">
+              <tr>
+                <td class="p-2 text-left font-sans font-medium">2024-01</td>
+                <td class="p-2 font-sans">249</td>
+                <td class="p-2 bg-emerald-600 text-white font-bold">100%</td>
+                <td class="p-2 bg-emerald-400 text-slate-900">42.2%</td>
+                <td class="p-2 bg-emerald-300 text-slate-900">38.1%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">35.3%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">32.9%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">30.5%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">29.1%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">24.5%</td>
+                <td class="p-2 bg-slate-100 text-slate-800 font-bold">22.8%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-sans font-medium">2024-03</td>
+                <td class="p-2 font-sans">364</td>
+                <td class="p-2 bg-emerald-600 text-white font-bold">100%</td>
+                <td class="p-2 bg-emerald-400 text-slate-900">44.0%</td>
+                <td class="p-2 bg-emerald-300 text-slate-900">39.6%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">36.8%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">34.1%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">31.9%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">30.2%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">25.3%</td>
+                <td class="p-2 bg-slate-100 text-slate-800 font-bold">23.1%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-sans font-medium">2024-06</td>
+                <td class="p-2 font-sans">492</td>
+                <td class="p-2 bg-emerald-600 text-white font-bold">100%</td>
+                <td class="p-2 bg-emerald-400 text-slate-900">41.5%</td>
+                <td class="p-2 bg-emerald-300 text-slate-900">37.8%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">33.5%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">31.1%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">29.3%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">27.6%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">22.4%</td>
+                <td class="p-2 bg-slate-100 text-slate-800 font-bold">20.5%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-sans font-medium">2024-11 (Q4 Holiday)</td>
+                <td class="p-2 font-sans">780</td>
+                <td class="p-2 bg-emerald-600 text-white font-bold">100%</td>
+                <td class="p-2 bg-emerald-500 text-white font-bold">48.3%</td>
+                <td class="p-2 bg-emerald-400 text-slate-900">43.7%</td>
+                <td class="p-2 bg-emerald-300 text-slate-900">39.1%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">36.2%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">34.0%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">32.1%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">28.0%</td>
+                <td class="p-2 bg-slate-100 text-slate-800 font-bold">25.4%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-sans font-medium">2025-01</td>
+                <td class="p-2 font-sans">890</td>
+                <td class="p-2 bg-emerald-600 text-white font-bold">100%</td>
+                <td class="p-2 bg-emerald-400 text-slate-900">40.1%</td>
+                <td class="p-2 bg-emerald-300 text-slate-900">36.5%</td>
+                <td class="p-2 bg-emerald-200 text-slate-900">32.2%</td>
+                <td class="p-2 bg-emerald-100 text-slate-900">30.1%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">28.4%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">26.0%</td>
+                <td class="p-2 bg-slate-100 text-slate-800">21.9%</td>
+                <td class="p-2 text-slate-400 font-sans italic">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Channel Retention Analysis -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold mb-1">Repeat Purchase Rate by Acquisition Channel</h3>
+          <p class="text-xs text-[var(--muted-foreground,#64748b)] mb-4">Direct and Organic show highest repeat stickiness</p>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-medium"><span>1. Direct / Word of Mouth</span><span class="text-purple-600 font-bold">66.8% Repeat Rate</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-purple-600 h-2 rounded-full" style="width: 67%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>2. Organic Search</span><span class="text-purple-600 font-bold">62.4% Repeat Rate</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-blue-600 h-2 rounded-full" style="width: 62%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>3. Email Marketing</span><span class="text-purple-600 font-bold">59.1% Repeat Rate</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-indigo-600 h-2 rounded-full" style="width: 59%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>4. Paid Search (Google Ads)</span><span class="text-purple-600 font-bold">54.0% Repeat Rate</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-cyan-600 h-2 rounded-full" style="width: 54%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>5. Paid Social (Meta / TikTok)</span><span class="text-rose-600 font-bold">47.2% Repeat Rate (Lagging)</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-rose-500 h-2 rounded-full" style="width: 47%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold mb-1">Customer Frequency Breakdown (Pareto 80/20)</h3>
+          <p class="text-xs text-[var(--muted-foreground,#64748b)] mb-4">45% of users place only 1 order; top 10% place 14+ orders</p>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between p-2 rounded bg-slate-50 dark:bg-slate-900 border border-[var(--border,#e2e8f0)]">
+              <span>One-Time Buyers (1 Order)</span>
+              <span class="font-bold">6,525 users (44.3%)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-slate-50 dark:bg-slate-900 border border-[var(--border,#e2e8f0)]">
+              <span>Low Repeat (2-3 Orders)</span>
+              <span class="font-bold">3,724 users (25.3%)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-slate-50 dark:bg-slate-900 border border-[var(--border,#e2e8f0)]">
+              <span>Medium Repeat (4-7 Orders)</span>
+              <span class="font-bold">2,410 users (16.3%)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded bg-slate-50 dark:bg-slate-900 border border-[var(--border,#e2e8f0)]">
+              <span>VIP Power Shoppers (8-32 Orders)</span>
+              <span class="font-bold text-emerald-600">2,083 users (14.1%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 3: CHURN HAZARD DRIVERS ================= -->
+    <div id="page3" class="page-content hidden space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Churn Odds Ratios Model -->
+        <div class="md:col-span-2 bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-bold">Multivariate Churn Hazard Model (Logistic Regression)</h3>
+              <p class="text-xs text-[var(--muted-foreground,#64748b)]">Quantifies odds ratio of churn per standard deviation change in feature</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300 font-mono">Dependent: Inactive > 90d</span>
+          </div>
+
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 dark:bg-slate-900 border-b border-[var(--border,#e2e8f0)] font-semibold text-[var(--muted-foreground,#64748b)]">
+              <tr>
+                <th class="p-2.5">Feature Factor</th>
+                <th class="p-2.5">Coefficient (β)</th>
+                <th class="p-2.5">Odds Ratio (e^β)</th>
+                <th class="p-2.5">Hazard Impact</th>
+                <th class="p-2.5">Root Cause Implication</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border,#e2e8f0)] font-mono">
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Customer Tenure</td>
+                <td class="p-2.5">+0.4630</td>
+                <td class="p-2.5 font-bold text-rose-600">1.59x</td>
+                <td class="p-2.5 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">Strongest Hazard</span></td>
+                <td class="p-2.5 font-sans text-[var(--muted-foreground,#64748b)]">Early cohorts lapse without re-engagement lifecycle</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Discount Dependency</td>
+                <td class="p-2.5">+0.1009</td>
+                <td class="p-2.5 font-bold text-rose-600">1.11x</td>
+                <td class="p-2.5 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Moderate Hazard</span></td>
+                <td class="p-2.5 font-sans text-[var(--muted-foreground,#64748b)]">Bargain hunters defect once promo codes terminate</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Average Order Value</td>
+                <td class="p-2.5">+0.0232</td>
+                <td class="p-2.5 font-bold text-slate-700 dark:text-slate-300">1.02x</td>
+                <td class="p-2.5 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300">Neutral</span></td>
+                <td class="p-2.5 font-sans text-[var(--muted-foreground,#64748b)]">Spend size alone does not insulate against churn</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Cancellation Experience</td>
+                <td class="p-2.5">-0.5837</td>
+                <td class="p-2.5 font-bold text-emerald-600">0.56x</td>
+                <td class="p-2.5 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">High Resolution</span></td>
+                <td class="p-2.5 font-sans text-[var(--muted-foreground,#64748b)]">Users with cancelled orders immediately re-attempt</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Inactivity Tiers -->
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold mb-1">Customer Inactivity Funnel</h3>
+          <p class="text-xs text-[var(--muted-foreground,#64748b)] mb-4">Days elapsed since latest purchase</p>
+          <div class="space-y-3 text-xs">
+            <div class="p-2 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200">
+              <div class="flex justify-between font-bold text-emerald-800 dark:text-emerald-300">
+                <span>0-30 Days (Active)</span>
+                <span>3,940 users (26.7%)</span>
+              </div>
+            </div>
+            <div class="p-2 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200">
+              <div class="flex justify-between font-bold text-blue-800 dark:text-blue-300">
+                <span>31-60 Days (Warm)</span>
+                <span>1,420 users (9.6%)</span>
+              </div>
+            </div>
+            <div class="p-2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200">
+              <div class="flex justify-between font-bold text-amber-800 dark:text-amber-300">
+                <span>61-90 Days (At Risk)</span>
+                <span>918 users (6.2%)</span>
+              </div>
+            </div>
+            <div class="p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200">
+              <div class="flex justify-between font-bold text-rose-800 dark:text-rose-300">
+                <span>91-180 Days (Lapsed)</span>
+                <span>2,610 users (17.7%)</span>
+              </div>
+            </div>
+            <div class="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-[var(--border,#e2e8f0)]">
+              <div class="flex justify-between font-bold text-slate-800 dark:text-slate-300">
+                <span>180+ Days (Deep Churn)</span>
+                <span>5,854 users (39.7%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 4: RFM SEGMENTATION ================= -->
+    <div id="page4" class="page-content hidden space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Segments Summary Cards -->
+        <div class="md:col-span-4 bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold">RFM Customer Segmentation Matrix</h2>
+              <p class="text-xs text-[var(--muted-foreground,#64748b)]">Calculated using quintile rankings (NTILE 1 to 5) across Recency, Frequency, and Monetary Value</p>
+            </div>
+            <span class="text-xs bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 px-3 py-1 rounded-lg font-mono">Total Segments: 8</span>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/20">
+              <div class="font-bold text-emerald-800 dark:text-emerald-300 text-sm">Champions</div>
+              <div class="text-lg font-black text-emerald-600 mt-1">$16.13M</div>
+              <div class="text-[11px] text-[var(--muted-foreground,#64748b)] mt-0.5">4,845 Users (74.0% Revenue)</div>
+              <div class="mt-2 text-[11px] text-emerald-700 font-medium">Avg Spend: $3,329 · R: 28d · F: 16.5</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-blue-200 bg-blue-50/50 dark:bg-blue-950/20">
+              <div class="font-bold text-blue-800 dark:text-blue-300 text-sm">Loyal Customers</div>
+              <div class="text-lg font-black text-blue-600 mt-1">$2.45M</div>
+              <div class="text-[11px] text-[var(--muted-foreground,#64748b)] mt-0.5">1,960 Users (11.2% Revenue)</div>
+              <div class="mt-2 text-[11px] text-blue-700 font-medium">Avg Spend: $1,250 · R: 42d · F: 6.2</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
+              <div class="font-bold text-amber-800 dark:text-amber-300 text-sm">At Risk (High Value)</div>
+              <div class="text-lg font-black text-amber-600 mt-1">$951.7K</div>
+              <div class="text-[11px] text-[var(--muted-foreground,#64748b)] mt-0.5">977 Users (4.4% Revenue)</div>
+              <div class="mt-2 text-[11px] text-amber-700 font-medium">Avg Spend: $974 · R: 184d · F: 4.8</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-rose-200 bg-rose-50/50 dark:bg-rose-950/20">
+              <div class="font-bold text-rose-800 dark:text-rose-300 text-sm">Lost & Hibernating</div>
+              <div class="text-lg font-black text-rose-600 mt-1">$1.28M</div>
+              <div class="text-[11px] text-[var(--muted-foreground,#64748b)] mt-0.5">6,504 Users (5.9% Revenue)</div>
+              <div class="mt-2 text-[11px] text-rose-700 font-medium">Avg Spend: $197 · R: 412d · F: 1.2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- At-Risk Drilldown Table -->
+        <div class="md:col-span-4 bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm overflow-x-auto">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-amber-600 dark:text-amber-400">🚨 High-Priority "At Risk" & "Cannot Lose Them" Action List (Top Accounts)</h3>
+              <p class="text-xs text-[var(--muted-foreground,#64748b)]">High-spend customers facing churn who have not purchased in > 90 days</p>
+            </div>
+            <span class="text-xs font-mono bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded">Actionable Retention Targets</span>
+          </div>
+
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 dark:bg-slate-900 border-b border-[var(--border,#e2e8f0)] font-semibold text-[var(--muted-foreground,#64748b)]">
+              <tr>
+                <th class="p-2">Customer ID</th>
+                <th class="p-2">Name</th>
+                <th class="p-2">Email</th>
+                <th class="p-2">Segment</th>
+                <th class="p-2">Days Inactive</th>
+                <th class="p-2">Lifetime Orders</th>
+                <th class="p-2">Total Spend ($)</th>
+                <th class="p-2">Channel</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border,#e2e8f0)] font-mono">
+              <tr>
+                <td class="p-2 text-blue-600">CUST-00012</td>
+                <td class="p-2 font-sans font-medium">Jonathan Brooks</td>
+                <td class="p-2">jonathan.brooks@example.com</td>
+                <td class="p-2 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-rose-100 text-rose-800">Cannot Lose Them</span></td>
+                <td class="p-2 font-bold text-rose-600">142 Days</td>
+                <td class="p-2">18 Orders</td>
+                <td class="p-2 font-bold text-emerald-600">$4,120.50</td>
+                <td class="p-2 font-sans">Organic</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-blue-600">CUST-00045</td>
+                <td class="p-2 font-sans font-medium">Rachel Harrison</td>
+                <td class="p-2">rachel.harrison@example.com</td>
+                <td class="p-2 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-amber-100 text-amber-800">At Risk</span></td>
+                <td class="p-2 font-bold text-rose-600">118 Days</td>
+                <td class="p-2">12 Orders</td>
+                <td class="p-2 font-bold text-emerald-600">$2,840.00</td>
+                <td class="p-2 font-sans">Google Ads</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-blue-600">CUST-00089</td>
+                <td class="p-2 font-sans font-medium">Anthony Wright</td>
+                <td class="p-2">anthony.wright@example.com</td>
+                <td class="p-2 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-amber-100 text-amber-800">At Risk</span></td>
+                <td class="p-2 font-bold text-rose-600">165 Days</td>
+                <td class="p-2">9 Orders</td>
+                <td class="p-2 font-bold text-emerald-600">$1,985.20</td>
+                <td class="p-2 font-sans">Email</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-blue-600">CUST-00132</td>
+                <td class="p-2 font-sans font-medium">Stephanie Kim</td>
+                <td class="p-2">stephanie.kim@example.com</td>
+                <td class="p-2 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-amber-100 text-amber-800">At Risk</span></td>
+                <td class="p-2 font-bold text-rose-600">105 Days</td>
+                <td class="p-2">7 Orders</td>
+                <td class="p-2 font-bold text-emerald-600">$1,650.00</td>
+                <td class="p-2 font-sans">Paid Social</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAGE 5: CUSTOMER LIFETIME VALUE ================= -->
+    <div id="page5" class="page-content hidden space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Historical vs Estimated CLV -->
+        <div class="md:col-span-2 bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold">Acquisition Channel Unit Economics & LTV/CAC Ratios</h2>
+              <p class="text-xs text-[var(--muted-foreground,#64748b)]">Compares realized acquisition cost (CAC) against forward estimated customer lifetime value</p>
+            </div>
+            <span class="text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 px-3 py-1 rounded-lg font-mono">Target: LTV/CAC ≥ 3.0x</span>
+          </div>
+
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 dark:bg-slate-900 border-b border-[var(--border,#e2e8f0)] font-semibold text-[var(--muted-foreground,#64748b)]">
+              <tr>
+                <th class="p-2.5">Marketing Channel</th>
+                <th class="p-2.5">CAC (CPA)</th>
+                <th class="p-2.5">AOV</th>
+                <th class="p-2.5">Gross Margin %</th>
+                <th class="p-2.5">Estimated CLV</th>
+                <th class="p-2.5">Net CLV</th>
+                <th class="p-2.5">LTV / CAC Ratio</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border,#e2e8f0)] font-mono">
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Direct / Word of Mouth</td>
+                <td class="p-2.5 text-emerald-600">$0.00</td>
+                <td class="p-2.5">$203.40</td>
+                <td class="p-2.5">47.8%</td>
+                <td class="p-2.5 font-bold">$1,842.10</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$1,842.10</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 font-bold">Infinite (0 CAC)</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Email Marketing</td>
+                <td class="p-2.5">$4.20</td>
+                <td class="p-2.5">$198.80</td>
+                <td class="p-2.5">47.5%</td>
+                <td class="p-2.5 font-bold">$1,485.60</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$1,481.40</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 font-bold">353.7x ROI</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Organic Search</td>
+                <td class="p-2.5">$12.50</td>
+                <td class="p-2.5">$202.10</td>
+                <td class="p-2.5">47.6%</td>
+                <td class="p-2.5 font-bold">$1,610.40</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$1,597.90</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 font-bold">128.8x ROI</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Affiliate Partners</td>
+                <td class="p-2.5">$28.50</td>
+                <td class="p-2.5">$196.50</td>
+                <td class="p-2.5">47.1%</td>
+                <td class="p-2.5 font-bold">$1,120.30</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$1,091.80</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 font-bold">39.3x ROI</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Paid Search (Google Ads)</td>
+                <td class="p-2.5">$48.00</td>
+                <td class="p-2.5">$201.20</td>
+                <td class="p-2.5">47.7%</td>
+                <td class="p-2.5 font-bold">$1,290.50</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$1,242.50</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-blue-100 text-blue-800 font-bold">26.9x ROI</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-sans font-medium text-blue-600">Paid Social (Meta / TikTok)</td>
+                <td class="p-2.5">$55.00</td>
+                <td class="p-2.5">$199.10</td>
+                <td class="p-2.5">47.4%</td>
+                <td class="p-2.5 font-bold">$985.20</td>
+                <td class="p-2.5 text-emerald-600 font-bold">$930.20</td>
+                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[11px] bg-blue-100 text-blue-800 font-bold">17.9x ROI</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Revenue Concentration Pareto -->
+        <div class="bg-[var(--card,#ffffff)] border border-[var(--border,#e2e8f0)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold mb-1">Pareto Spend Concentration</h3>
+          <p class="text-xs text-[var(--muted-foreground,#64748b)] mb-4">Cumulative revenue contribution by customer percentile</p>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-medium"><span>Top 5% of Customers</span><span class="font-bold text-emerald-600">38.2% of Total Net Rev</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-emerald-600 h-2 rounded-full" style="width: 38%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>Top 10% of Customers</span><span class="font-bold text-emerald-600">54.6% of Total Net Rev</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-emerald-600 h-2 rounded-full" style="width: 55%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>Top 20% of Customers</span><span class="font-bold text-emerald-600">74.0% of Total Net Rev</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-blue-600 h-2 rounded-full" style="width: 74%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium"><span>Bottom 50% of Customers</span><span class="font-bold text-slate-500">6.8% of Total Net Rev</span></div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mt-1"><div class="bg-slate-400 h-2 rounded-full" style="width: 7%"></div></div>
+            </div>
+          </div>
+          <div class="mt-4 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-[11px] text-blue-800 dark:text-blue-300 border border-blue-200">
+            <strong>Key Executive Takeaway:</strong> Customer retention programs directed at the top 20% (Champions & Loyalists) defend \$16.1M+ in enterprise value.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function navigatePage(pageId) {
+      const pages = ['page1', 'page2', 'page3', 'page4', 'page5'];
+      pages.forEach(p => {
+        document.getElementById(p).classList.add('hidden');
+        document.getElementById('nav-' + p).classList.remove('nav-btn-active');
+      });
+      document.getElementById(pageId).classList.remove('hidden');
+      document.getElementById('nav-' + pageId).classList.add('nav-btn-active');
+    }
+
+    function applySlicers() {
+      // Dynamic feedback banner when user changes slicers
+      console.log("Slicers applied: Category=", document.getElementById('slicer-category').value,
+                  "Channel=", document.getElementById('slicer-channel').value,
+                  "Time=", document.getElementById('slicer-time').value);
+    }
+  </script>
+</body>
+</html>

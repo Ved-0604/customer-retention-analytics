@@ -50,3 +50,10 @@ ENV/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Local Analytical Database Binaries
+*.duckdb
+*.duckdb.wal
+*.db
+*.sqlite
+*.sqlite3
