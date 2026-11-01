@@ -1,0 +1,121 @@
+product_id,product_name,category,base_price,cogs,is_active
+PROD-0001,Wireless Noise-Canceling Headphones,Electronics,252.5,171.28,True
+PROD-0002,Smart Fitness Watch,Electronics,450.52,292.2,True
+PROD-0003,Ultra-Slim 4K Monitor,Electronics,131.43,80.33,True
+PROD-0004,Bluetooth Portable Speaker,Electronics,77.18,51.8,True
+PROD-0005,USB-C Multiport Hub,Electronics,378.02,248.67,True
+PROD-0006,Mechanical Gaming Keyboard,Electronics,56.4,38.35,True
+PROD-0007,Ergonomic Wireless Mouse,Electronics,506.17,311.77,True
+PROD-0008,1080p HD Webcam,Electronics,145.73,89.41,True
+PROD-0009,Wireless Fast Charger Pad,Electronics,213.55,137.17,True
+PROD-0010,Smart Home Voice Assistant,Electronics,284.3,177.01,True
+PROD-0011,Classic Oxford Cotton Shirt,Apparel & Fashion,104.88,39.36,True
+PROD-0012,Slim-Fit Stretch Denim Jeans,Apparel & Fashion,59.48,23.02,True
+PROD-0013,Merino Wool Crewneck Sweater,Apparel & Fashion,82.76,33.83,True
+PROD-0014,Waterproof Trail Running Jacket,Apparel & Fashion,46.35,18.3,True
+PROD-0015,Breathable Athletic Joggers,Apparel & Fashion,102.12,37.83,True
+PROD-0016,Premium Leather Dress Belt,Apparel & Fashion,104.27,39.3,True
+PROD-0017,Casual Canvas Sneakers,Apparel & Fashion,27.24,11.37,True
+PROD-0018,UV-Protection Sunglasses,Apparel & Fashion,155.12,63.6,True
+PROD-0019,Everyday Crew Socks (6-Pack),Apparel & Fashion,61.26,22.85,True
+PROD-0020,Thermal Fleece Half-Zip,Apparel & Fashion,115.16,45.01,True
+PROD-0021,Stainless Steel Cookware Set (10-Pc),Home & Kitchen,53.49,25.27,True
+PROD-0022,Cast Iron Dutch Oven 6-Qt,Home & Kitchen,30.87,15.38,True
+PROD-0023,Programmable Drip Coffee Maker,Home & Kitchen,88.77,42.87,True
+PROD-0024,High-Speed Countertop Blender,Home & Kitchen,102.42,48.55,True
+PROD-0025,Memory Foam Pillow Pair,Home & Kitchen,163.05,73.88,True
+PROD-0026,Egyptian Cotton Bed Sheets,Home & Kitchen,272.15,133.34,True
+PROD-0027,Aroma Essential Oil Diffuser,Home & Kitchen,264.39,131.52,True
+PROD-0028,LED Dimmable Desk Lamp,Home & Kitchen,176.26,87.98,True
+PROD-0029,Non-Stick Ceramic Frying Pan,Home & Kitchen,44.83,20.35,True
+PROD-0030,Bamboo Kitchen Cutting Board Set,Home & Kitchen,33.67,15.55,True
+PROD-0031,Hydrating Hyaluronic Acid Serum,Beauty & Personal Care,40.37,13.5,True
+PROD-0032,Vitamin C Brightening Moisturizer,Beauty & Personal Care,72.5,24.52,True
+PROD-0033,Gentle Foaming Daily Cleanser,Beauty & Personal Care,32.51,11.27,True
+PROD-0034,Repairing Keratin Hair Mask,Beauty & Personal Care,22.29,7.99,True
+PROD-0035,Organic Argan Facial Oil,Beauty & Personal Care,17.44,6.4,True
+PROD-0036,Mineral Broad-Spectrum Sunscreen SPF50,Beauty & Personal Care,68.37,22.63,True
+PROD-0037,Exfoliating AHA/BHA Toner,Beauty & Personal Care,12.4,4.45,True
+PROD-0038,Botanical Body Wash 16oz,Beauty & Personal Care,63.6,22.59,True
+PROD-0039,Sonic Vibrating Toothbrush,Beauty & Personal Care,68.3,22.22,True
+PROD-0040,Shea Butter Hand Cream,Beauty & Personal Care,38.17,12.49,True
+PROD-0041,Adjustable Dumbbell Pair 50lb,Sports & Outdoors,279.62,139.95,True
+PROD-0042,Anti-Tear Yoga Mat with Strap,Sports & Outdoors,122.61,56.91,True
+PROD-0043,Insulated Stainless Steel Bottle 32oz,Sports & Outdoors,116.74,56.17,True
+PROD-0044,Ultralight 2-Person Camping Tent,Sports & Outdoors,240.23,120.46,True
+PROD-0045,Trekking Poles Carbon Fiber,Sports & Outdoors,286.73,140.7,True
+PROD-0046,High-Density Foam Roller,Sports & Outdoors,60.28,30.52,True
+PROD-0047,Resistance Exercise Bands Set,Sports & Outdoors,249.43,123.84,True
+PROD-0048,Quick-Dry Microfiber Camp Towel,Sports & Outdoors,252.44,124.22,True
+PROD-0049,Waterproof LED Headlamp,Sports & Outdoors,179.21,87.42,True
+PROD-0050,Compact Bike Repair Multi-Tool,Sports & Outdoors,32.5,15.18,True
+PROD-0051,Modern Data Analytics in Practice,Books & Media,10.13,4.57,True
+PROD-0052,Product Strategy for Digital Era,Books & Media,20.32,9.02,True
+PROD-0053,The Behavioral Psychology of Habits,Books & Media,41.67,17.86,True
+PROD-0054,Machine Learning Systems Design,Books & Media,23.77,10.89,True
+PROD-0055,Financial Freedom Playbook,Books & Media,17.24,7.21,True
+PROD-0056,World Architecture Illustrated,Books & Media,19.43,8.23,True
+PROD-0057,Culinary Fundamentals & Recipes,Books & Media,42.47,19.59,True
+PROD-0058,Mindfulness and Mental Resilience,Books & Media,31.8,14.79,True
+PROD-0059,History of Scientific Revolutions,Books & Media,37.93,16.12,True
+PROD-0060,Creative Thinking Workshop,Books & Media,41.13,18.33,True
+PROD-0061,Wild Alaskan Omega-3 Fish Oil,Health & Wellness,79.6,31.35,True
+PROD-0062,Grass-Fed Whey Protein Powder 2lb,Health & Wellness,40.44,14.36,True
+PROD-0063,Daily Multi-Vitamin & Mineral Complex,Health & Wellness,33.23,12.32,True
+PROD-0064,Plant-Based Organic Supergreens,Health & Wellness,80.44,31.54,True
+PROD-0065,Melatonin Sleep Aid Gummies,Health & Wellness,15.56,5.83,True
+PROD-0066,Pure Magnesium Glycinate Tablets,Health & Wellness,48.39,17.45,True
+PROD-0067,Turmeric Curcumin Anti-Inflammatory,Health & Wellness,24.59,9.01,True
+PROD-0068,Probiotic 50 Billion CFU,Health & Wellness,90.43,33.06,True
+PROD-0069,Collagen Peptides Powder 16oz,Health & Wellness,56.5,21.71,True
+PROD-0070,Electrolyte Hydration Drink Mix,Health & Wellness,44.09,17.53,True
+PROD-0071,Architectural Building Blocks Set,Toys & Games,106.39,42.57,True
+PROD-0072,Strategy Board Game: Empires,Toys & Games,61.74,24.87,True
+PROD-0073,Magnetic STEM Tiles (100 Pcs),Toys & Games,41.34,16.06,True
+PROD-0074,Remote Control Racing Drone,Toys & Games,72.52,30.01,True
+PROD-0075,Wooden Montessori Puzzle Box,Toys & Games,18.94,7.61,True
+PROD-0076,Classic Family Trivia Night,Toys & Games,101.19,40.42,True
+PROD-0077,Interactive Robot Coding Kit,Toys & Games,27.91,11.53,True
+PROD-0078,Artisan Clay Craft Sculpting Kit,Toys & Games,108.62,43.41,True
+PROD-0079,Card Game: Tactical Blitz,Toys & Games,78.53,33.61,True
+PROD-0080,Children Illustrated Storybook Library,Toys & Games,36.81,15.69,True
+PROD-0081,Ergonomic Lumbar Support Cushion,Office Products,60.23,27.16,True
+PROD-0082,Dual-Arm Heavy Duty Monitor Mount,Office Products,97.96,43.63,True
+PROD-0083,Full-Desk Leatherette Mousepad,Office Products,20.82,9.64,True
+PROD-0084,Document Shredder Cross-Cut,Office Products,53.55,22.75,True
+PROD-0085,Gel Ink Retractable Pens (12-Pack),Office Products,13.79,6.19,True
+PROD-0086,Adjustable Laptop Standing Riser,Office Products,104.21,43.24,True
+PROD-0087,Steel Mesh Desktop Organizer,Office Products,80.72,34.49,True
+PROD-0088,Dry Erase Magnetic Whiteboard,Office Products,99.61,42.25,True
+PROD-0089,Noise-Dampening Acoustic Desk Divider,Office Products,106.11,46.33,True
+PROD-0090,Thermal Label Maker Printer,Office Products,141.02,59.52,True
+PROD-0091,Digital Tire Pressure Gauge & Inflator,Automotive,88.21,45.35,True
+PROD-0092,OBD2 Bluetooth Diagnostic Scanner,Automotive,204.94,116.56,True
+PROD-0093,Emergency Roadside Assistance Kit,Automotive,71.59,39.6,True
+PROD-0094,Microfiber Car Detailing Towels (12-Pack),Automotive,183.44,100.1,True
+PROD-0095,Heavy-Duty All-Weather Floor Mats,Automotive,125.93,65.9,True
+PROD-0096,Universal Magnetic Phone Mount,Automotive,38.62,22.02,True
+PROD-0097,12V Portable Car Vacuum Cleaner,Automotive,200.08,110.3,True
+PROD-0098,Ceramic Coating Paint Sealant,Automotive,87.81,46.62,True
+PROD-0099,Windshield Sunshade Reflective,Automotive,165.19,94.18,True
+PROD-0100,Jump Starter Power Bank 1500A,Automotive,197.42,110.9,True
+PROD-0101,Orthopedic Memory Foam Dog Bed,Pet Supplies,84.19,35.27,True
+PROD-0102,Grain-Free Salmon Dog Food 25lb,Pet Supplies,29.43,13.73,True
+PROD-0103,Self-Cleaning Covered Cat Litter Box,Pet Supplies,80.13,33.22,True
+PROD-0104,Multi-Level Sisal Cat Scratching Tree,Pet Supplies,22.57,10.22,True
+PROD-0105,Interactive Laser Pet Toy,Pet Supplies,11.58,4.9,True
+PROD-0106,Durable Rubber Chew Bone,Pet Supplies,73.56,33.43,True
+PROD-0107,Natural Clumping Odor-Control Litter,Pet Supplies,85.32,36.44,True
+PROD-0108,Stainless Steel Anti-Vomit Pet Bowls,Pet Supplies,92.19,39.45,True
+PROD-0109,Retractable Dog Walking Leash 16ft,Pet Supplies,48.1,22.01,True
+PROD-0110,Gentle De-Shedding Grooming Brush,Pet Supplies,85.06,39.44,True
+PROD-0111,Minimalist Solar Chronograph Watch,Jewelry & Watches,307.91,91.81,True
+PROD-0112,Sterling Silver Herringbone Necklace,Jewelry & Watches,73.88,21.45,True
+PROD-0113,14k Gold-Plated Huggie Earrings,Jewelry & Watches,145.06,41.42,True
+PROD-0114,Classic Leather Strap Dress Watch,Jewelry & Watches,438.8,127.84,True
+PROD-0115,Cubic Zirconia Tennis Bracelet,Jewelry & Watches,405.2,121.81,True
+PROD-0116,Titanium Matte Finish Band Ring,Jewelry & Watches,364.85,107.85,True
+PROD-0117,Natural Freshwater Pearl Pendant,Jewelry & Watches,274.42,81.01,True
+PROD-0118,Diver 200M Automatic Stainless Watch,Jewelry & Watches,116.03,35.29,True
+PROD-0119,Braided Italian Leather Cuff,Jewelry & Watches,151.52,41.96,True
+PROD-0120,Personalized Initial Signet Ring,Jewelry & Watches,302.87,85.68,True

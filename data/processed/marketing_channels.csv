@@ -1,0 +1,8 @@
+channel_id,channel_name,channel_type,avg_cpa
+1,Organic Search,Inbound,12.5
+2,Paid Search (Google Ads),Paid,48.0
+3,Paid Social (Meta / TikTok),Paid,55.0
+4,Email Marketing,Owned,4.2
+5,Affiliate Partners,Referral,28.5
+6,Influencer Campaigns,Paid,62.0
+7,Direct / Word of Mouth,Direct,0.0
