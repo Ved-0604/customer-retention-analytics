@@ -5,6 +5,7 @@
 [![DuckDB](https://img.shields.io/badge/DuckDB-OLAP-FFF000.svg)](https://duckdb.org/)
 [![Power BI](https://img.shields.io/badge/Power_BI-Executive_Dashboard-F2C811.svg)](https://powerbi.microsoft.com/)
 [![Tests](https://img.shields.io/badge/Tests-16%20Passed-green.svg)](https://pytest.org/)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Ved-0604/customer-retention-analytics)
 
 An enterprise-grade, end-to-end e-commerce customer analytics platform engineered from scratch. Simulates real-world data engineering, relational database modeling in **PostgreSQL**, cohort retention and churn driver modeling in **Python**, validation with automated **pytest** suites, and executive reporting in **Power BI**.
 
